@@ -5,6 +5,7 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { UseAuthModal } from "@/hooks/use-auth-modal";
 
 interface HeaderProps {
   children: React.ReactNode;
@@ -12,6 +13,8 @@ interface HeaderProps {
 }
 
 export const Header = ({ children, className }: HeaderProps) => {
+  const { changeMode, onOpen } = UseAuthModal();
+
   return (
     <div className={cn("h-fit bg-gradient-to-b from-cyan-800 p-6", className)}>
       <div className="w-full mb-4 flex items-center justify-between">
@@ -43,7 +46,10 @@ export const Header = ({ children, className }: HeaderProps) => {
             <div>
               <Button
                 variant="pictury"
-                onClick={() => {}}
+                onClick={() => {
+                  changeMode(false);
+                  onOpen();
+                }}
                 className="rounded-full"
               >
                 Sign up
@@ -53,7 +59,10 @@ export const Header = ({ children, className }: HeaderProps) => {
               <Button
                 variant="link"
                 className="no-underline hover:no-underline hover:opacity-80"
-                onClick={() => {}}
+                onClick={() => {
+                  changeMode(true);
+                  onOpen();
+                }}
               >
                 Log in
               </Button>
