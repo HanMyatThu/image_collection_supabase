@@ -2,6 +2,10 @@
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { toast } from "sonner";
+import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 
 import {
   Dialog,
@@ -22,25 +26,22 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { UseAuthModal } from "@/hooks/use-auth-modal";
-
-const strongPassword =
-  /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
+import { createClient } from "@/lib/supabase/client";
 
 export const AuthModal = () => {
+  const router = useRouter();
   const { isOpen, isSignIn, onClose, changeMode } = UseAuthModal();
+
+  const [loading, setLoading] = useState(false);
+
+  const supabase = createClient();
 
   const formSchema = z.object({
     email: z.string().email("Invalid email format"),
     password: z
       .string()
       .min(8, "Password should have minimum 8 charactors")
-      .max(60, "Max 60 words for password")
-      .refine(
-        (value) => {
-          return strongPassword.test(value);
-        },
-        { message: "Strong password is required" }
-      ),
+      .max(60, "Max 60 words for password"),
   });
 
   const handleClose = (open: boolean) => {
@@ -57,13 +58,40 @@ export const AuthModal = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setLoading(true);
+    if (isSignIn) {
+      //sign in
+      const { error } = await supabase.auth.signInWithPassword(values);
+      setLoading(false);
+      if (error) {
+        form.setError("root", { message: error.message });
+        toast.error(error.message);
+      } else {
+        form.reset();
+        onClose();
+        router.refresh();
+        toast.success("You have login successfully");
+      }
+    } else {
+      const { error } = await supabase.auth.signUp(values);
+      setLoading(false);
+      if (error) {
+        form.setError("root", { message: error.message });
+        toast.error(error.message);
+      } else {
+        form.reset();
+        onClose();
+        router.refresh();
+        toast.success("Please confirm your email.");
+      }
+    }
   };
 
   const title = isSignIn
-    ? "Create an new account!"
-    : "Login with your account!";
+    ? "Login with your account!"
+    : "Create an new account!";
+
   const label = isSignIn
     ? "Don't have an account? "
     : "Already have an account?";
@@ -112,9 +140,17 @@ export const AuthModal = () => {
                   </FormItem>
                 )}
               />
+              {form.formState.errors.root && (
+                <div className="w-full">
+                  <p className="text-destructive text-sm font-semibold">
+                    {`${form.formState.errors.root.message}`}
+                  </p>
+                </div>
+              )}
               <div className="w-full justify-center text-center">
                 <Button variant="pictury" type="submit">
                   {isSignIn ? "Sign in" : "Sign up"}
+                  {loading && <Loader2 className="ml-2 animate-spin size-5" />}
                 </Button>
               </div>
             </form>

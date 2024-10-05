@@ -3,9 +3,11 @@ import type { Metadata } from "next";
 import { Figtree } from "next/font/google";
 
 import "./globals.css";
-import { ThemeProvider } from "@/providers/theme-provider";
 import { Sidebar } from "@/components/sidebar";
+import { Toaster } from "@/components/ui/sonner";
+import { ThemeProvider } from "@/providers/theme-provider";
 import { ModalProvider } from "@/providers/modal-provider";
+import { UserProvider } from "@/providers/user-provider";
 
 const font = Figtree({ subsets: ["latin"] });
 
@@ -22,10 +24,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${font.className} antialiased`}>
-        <ThemeProvider defaultTheme="dark" attribute="class">
-          <ModalProvider />
-          <Sidebar>{children}</Sidebar>
-        </ThemeProvider>
+        <UserProvider>
+          <ThemeProvider defaultTheme="dark" attribute="class">
+            <Toaster />
+            <ModalProvider />
+            <Sidebar>{children}</Sidebar>
+          </ThemeProvider>
+        </UserProvider>
       </body>
     </html>
   );

@@ -10,7 +10,7 @@ interface UseAuthModalProps {
 
 export const UseAuthModal = create<UseAuthModalProps>((set) => ({
   isOpen: false,
-  isSignIn: true,
+  isSignIn: false,
   changeMode: (mode: boolean) => set({ isSignIn: mode }),
   onOpen: () => set({ isOpen: true }),
   onClose: () => set({ isOpen: false }),
