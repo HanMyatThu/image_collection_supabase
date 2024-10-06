@@ -1,11 +1,18 @@
 "use client";
 import { User } from "@supabase/supabase-js";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getSessionUser } from "@/actions/get-session-user";
 
 type UserContextType = {
   user: User | null;
+  setUser: Dispatch<User | null>;
   isLoading: boolean;
 };
 
@@ -19,7 +26,7 @@ export interface MyUserProviderProps {
 
 export const MyUserProvider = (props: MyUserProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -29,11 +36,14 @@ export const MyUserProvider = (props: MyUserProviderProps) => {
       if (data) setUser(data);
     };
 
-    fetchUser();
-  }, []);
+    if (!user) {
+      fetchUser();
+    }
+  }, [user]);
 
   const value = {
     user,
+    setUser,
     isLoading: loading,
   };
 

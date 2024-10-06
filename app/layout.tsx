@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   description: "Get your favourite image here!",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
@@ -28,7 +28,7 @@ export default function RootLayout({
           <ThemeProvider defaultTheme="dark" attribute="class">
             <Toaster />
             <ModalProvider />
-            <Sidebar>{children}</Sidebar>
+            <Sidebar images={[]}>{children}</Sidebar>
           </ThemeProvider>
         </UserProvider>
       </body>

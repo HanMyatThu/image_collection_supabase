@@ -5,11 +5,14 @@ import { HomeIcon, SearchIcon } from "lucide-react";
 
 import { Box } from "./box";
 import { SidebarItem } from "./sidebar-item";
+import { Album } from "@/components/common/album";
+import { Image } from "@/types/types";
 interface SidebarProps {
   children: React.ReactNode;
+  images: Image[];
 }
 
-export const Sidebar = ({ children }: SidebarProps) => {
+export const Sidebar = ({ children, images }: SidebarProps) => {
   const pathname = usePathname();
 
   const routes = useMemo(() => {
@@ -41,9 +44,7 @@ export const Sidebar = ({ children }: SidebarProps) => {
         </Box>
         <Box>
           <div className="flex flex-col gap-y-2 px-5 py-4">
-            {routes.map((route) => (
-              <SidebarItem key={route.label} {...route} />
-            ))}
+            <Album images={images} />
           </div>
         </Box>
       </div>

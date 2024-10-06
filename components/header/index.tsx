@@ -1,11 +1,15 @@
 "use client";
 
 import { CameraIcon, HomeIcon, Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { UseAuthModal } from "@/hooks/use-auth-modal";
+import { useUser } from "@/hooks/use-user";
+import { cn } from "@/lib/utils";
+import { createClient } from "@/lib/supabase/client";
 
 interface HeaderProps {
   children: React.ReactNode;
@@ -13,7 +17,22 @@ interface HeaderProps {
 }
 
 export const Header = ({ children, className }: HeaderProps) => {
+  const router = useRouter();
   const { changeMode, onOpen } = UseAuthModal();
+  const { user, setUser } = useUser();
+
+  const supabaseClient = createClient();
+
+  const handleSignOut = async () => {
+    const { error } = await supabaseClient.auth.signOut();
+    router.refresh();
+    if (error) {
+      toast.error(error.message);
+    } else {
+      setUser(null);
+      toast.success("logged out!");
+    }
+  };
 
   return (
     <div className={cn("h-fit bg-gradient-to-b from-cyan-800 p-6", className)}>
@@ -42,32 +61,42 @@ export const Header = ({ children, className }: HeaderProps) => {
           </button>
         </div>
         <div className="flex justify-between items-center gap-x-4">
-          <>
-            <div>
-              <Button
-                variant="pictury"
-                onClick={() => {
-                  changeMode(false);
-                  onOpen();
-                }}
-                className="rounded-full"
-              >
-                Sign up
-              </Button>
-            </div>
-            <div>
-              <Button
-                variant="link"
-                className="no-underline hover:no-underline hover:opacity-80"
-                onClick={() => {
-                  changeMode(true);
-                  onOpen();
-                }}
-              >
-                Log in
-              </Button>
-            </div>
-          </>
+          {user ? (
+            <Button
+              variant="pictury"
+              onClick={handleSignOut}
+              className="rounded-full"
+            >
+              Sign out
+            </Button>
+          ) : (
+            <>
+              <div>
+                <Button
+                  variant="pictury"
+                  onClick={() => {
+                    changeMode(false);
+                    onOpen();
+                  }}
+                  className="rounded-full"
+                >
+                  Sign up
+                </Button>
+              </div>
+              <div>
+                <Button
+                  variant="link"
+                  className="no-underline hover:no-underline hover:opacity-80"
+                  onClick={() => {
+                    changeMode(true);
+                    onOpen();
+                  }}
+                >
+                  Log in
+                </Button>
+              </div>
+            </>
+          )}
         </div>
       </div>
       {children}
