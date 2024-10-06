@@ -7,16 +7,6 @@ import { ListItem } from "@/components/common/list-item";
 const HomePage = async () => {
   const images = await getPublicImages();
 
-  // if (isLoading) {
-  //   return (
-  //     <div className="h-full w-full rounded-full">
-  //       <div className="flex h-full w-full items-center justify-center ml-auto">
-  //         <Loader2 className="font-semibold size-8 animate-spin" />
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   return (
     <div>
       <Header>
