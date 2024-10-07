@@ -1,11 +1,16 @@
 "use client";
 import Image from "next/image";
 import { ZoomIn, HeartIcon } from "lucide-react";
+import { useTransition } from "react";
+import { toast } from "sonner";
 
+import { Preview } from "@/components/common/preview";
 import { Button } from "@/components/ui/button";
 import { useLoadImage } from "@/hooks/use-load-image";
+import { useUser } from "@/hooks/use-user";
 import { Image as ImageType } from "@/types/types";
-import { Preview } from "@/components/common/preview";
+import { downloadImage } from "@/actions/images";
+import { downloadFile } from "@/lib/utils";
 
 interface ImageItemProps {
   data: ImageType;
@@ -21,8 +26,27 @@ export const ImageItem = ({
   disabled = false,
 }: ImageItemProps) => {
   const imagePath = useLoadImage(data);
+  const { user } = useUser();
+  const [isLoading, startTransition] = useTransition();
 
   const isLiked = favImageIds.includes(data.id);
+
+  const onDownload = () => {
+    startTransition(() => {
+      downloadImage(data)
+        .then(async (data: string) => {
+          const response = await fetch(data);
+          const blobData = await response.blob();
+          const url = window.URL.createObjectURL(blobData);
+          downloadFile(url);
+          window.URL.revokeObjectURL(url);
+          toast.error("Image downloaded");
+        })
+        .catch((error) => {
+          toast.error(error.message || "Something went wrong");
+        });
+    });
+  };
 
   return (
     <div className="relative flex flex-col items-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3">
@@ -33,7 +57,11 @@ export const ImageItem = ({
           fill
           alt="song-image"
         />
-        <Preview url={imagePath}>
+        <Preview
+          url={imagePath}
+          onDownload={user ? onDownload : undefined}
+          disabled={isLoading}
+        >
           <Button
             variant="ghost"
             size="icon"

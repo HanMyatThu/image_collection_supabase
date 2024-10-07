@@ -10,6 +10,7 @@ import { cn } from "@/lib/utils";
 import { useTransition } from "react";
 import { signOut } from "@/actions/auth";
 import { User } from "@supabase/supabase-js";
+import { useUser } from "@/hooks/use-user";
 
 interface HeaderProps {
   children: React.ReactNode;
@@ -21,11 +22,13 @@ export const Header = ({ children, className, user }: HeaderProps) => {
   const router = useRouter();
   const [, startTransition] = useTransition();
   const { changeMode, onOpen } = UseAuthModal();
+  const { setUser } = useUser();
 
   const handleSignOut = () => {
     startTransition(() => {
       signOut()
         .then(() => {
+          setUser(null);
           toast.success("You have log out successfully");
           router.push("/");
         })

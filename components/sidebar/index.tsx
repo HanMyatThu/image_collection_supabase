@@ -1,12 +1,13 @@
 "use client";
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { HeartIcon, HomeIcon, SearchIcon } from "lucide-react";
+import { FileEdit, HeartIcon, HomeIcon, SearchIcon } from "lucide-react";
 
 import { Box } from "./box";
 import { SidebarItem } from "./sidebar-item";
 import { Album } from "@/components/common/album";
 import { Image } from "@/types/types";
+import { useUser } from "@/hooks/use-user";
 interface SidebarProps {
   children: React.ReactNode;
   images: Image[];
@@ -14,6 +15,7 @@ interface SidebarProps {
 
 export const Sidebar = ({ children, images }: SidebarProps) => {
   const pathname = usePathname();
+  const { user } = useUser();
 
   const routes = useMemo(() => {
     return [
@@ -35,8 +37,14 @@ export const Sidebar = ({ children, images }: SidebarProps) => {
         href: "/search",
         icon: SearchIcon,
       },
+      {
+        label: "Images",
+        active: pathname === `${user?.id}/images`,
+        href: `${user?.id}/images`,
+        icon: FileEdit,
+      },
     ];
-  }, [pathname]);
+  }, [pathname, user]);
 
   return (
     <aside className="flex h-full">

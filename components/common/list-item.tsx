@@ -1,6 +1,7 @@
 "use client";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { ArrowRight } from "lucide-react";
 
 import { useLoadImage } from "@/hooks/use-load-image";
 import { Image as IImage } from "@/types/types";
@@ -37,7 +38,13 @@ export const ListItem = ({ name, images, href }: ListItemProps) => {
       <p className="font-medium truncate absolute top-[45%] group-hover:opacity-55 flex justify-center ml-auto w-full group-hover:text-black/80">
         {images.length === 0 ? "No favourite image yet" : name}
       </p>
-      {hasFavImages && <div className="absolute bottom-1 right-0">Hello</div>}
+      {hasFavImages && (
+        <div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 flex flex-row items-center gap-x-1 text-blue-950 font-semibold">
+          <div className="p-0.5 rounded-full bg-cyan-700/50 text-white/85">
+            <ArrowRight className="size-4" />
+          </div>
+        </div>
+      )}
     </button>
   );
 };

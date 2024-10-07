@@ -23,7 +23,7 @@ const HomePage = async () => {
         <div className="mb-2">
           {user.user && (
             <>
-              <h1 className="text-white text-xl font-semibold mt-4">
+              <h1 className="text-white text-xl font-semibold mt-8">
                 Your Favourite Images
               </h1>
               <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">

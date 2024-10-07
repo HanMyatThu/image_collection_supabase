@@ -12,9 +12,8 @@ interface ImageRequest {
   image_path: string;
 }
 
-const supabase = createServerComponentClient();
-
 export const createImage = async (data: ImageRequest) => {
+  const supabase = createServerComponentClient();
   const { error } = await supabase.from("images").insert(data);
 
   if (error) {
@@ -35,6 +34,7 @@ export const createImage = async (data: ImageRequest) => {
  * @returns
  */
 export const getImages = async (): Promise<Image[]> => {
+  const supabase = createServerComponentClient();
   const { data: sessionUser } = await supabase.auth.getUser();
 
   if (sessionUser.user) {
@@ -72,6 +72,7 @@ export const getImages = async (): Promise<Image[]> => {
  * @returns Image[] return all images from the users (both private and public)
  */
 export const getImagesByUserId = async (): Promise<Image[]> => {
+  const supabase = createServerComponentClient();
   const { data: sessionUser } = await supabase.auth.getUser();
 
   if (!sessionUser.user) {
@@ -91,7 +92,7 @@ export const getImagesByUserId = async (): Promise<Image[]> => {
 };
 
 /**
- * @param title string song title
+ * @param title string image title
  * Get Image by Title
  * use this function for search functionality
  * @return Image[] return images with search keyword for the users
@@ -115,4 +116,30 @@ export const getImageByTitle = async (title: string): Promise<Image[]> => {
   }
 
   return (data as Image[]) || [];
+};
+
+/**
+ * Download image from supabase storage
+ * @param id string image id
+ * @return download a string
+ */
+export const downloadImage = async (image: Image): Promise<string> => {
+  const supabase = createServerComponentClient();
+
+  const { data: sessionData, error: sessionError } =
+    await supabase.auth.getUser();
+
+  if (!sessionData.user || sessionError) {
+    throw new Error("Unabled to download an image");
+  }
+
+  const { data: imageData } = supabase.storage
+    .from("images")
+    .getPublicUrl(image.image_path, { download: true });
+
+  if (!imageData) {
+    throw new Error("Unabled to download an image");
+  }
+
+  return imageData.publicUrl;
 };

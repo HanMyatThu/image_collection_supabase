@@ -7,6 +7,7 @@ import { useUploadModal } from "@/hooks/use-upload-modal";
 import { Image } from "@/types/types";
 import { MediaItem } from "./media-item";
 import { AlbumSection } from "./album-section";
+import { ToolTipHint } from "./tooltip-hint";
 
 interface AlbumProps {
   images: Image[];
@@ -37,10 +38,12 @@ export const Album = ({ images }: AlbumProps) => {
             Your Images
           </p>
         </div>
-        <Plus
-          onClick={onClick}
-          className="size-4 text-muted-foreground cursor-pointer hover:text-white transition-colors"
-        />
+        <ToolTipHint label="upload image">
+          <Plus
+            onClick={onClick}
+            className="size-4 text-muted-foreground cursor-pointer hover:text-white transition-colors"
+          />
+        </ToolTipHint>
       </div>
       <div className="flex flex-col gap-y-4 mt-4 px-3">
         {images.length === 0 && (
