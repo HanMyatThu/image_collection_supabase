@@ -6,6 +6,7 @@ import { Image } from "@/types/types";
 import { ImageItem } from "./image-item";
 import { likeImage, removelike } from "@/actions/favourites";
 import { UseAuthModal } from "@/hooks/use-auth-modal";
+import { useRouter } from "next/navigation";
 
 interface PageContentProps {
   images: Image[];
@@ -19,6 +20,7 @@ export const PageContent = ({
   favImageIds,
 }: PageContentProps) => {
   const [isLoading, startTransition] = useTransition();
+  const router = useRouter();
   const { onOpen } = UseAuthModal();
 
   if (!images.length) {
@@ -35,9 +37,11 @@ export const PageContent = ({
       startTransition(() => {
         removelike(id)
           .then(() => {
+            router.refresh();
             toast.success("You have unliked an image.");
           })
           .catch((error) => {
+            router.refresh();
             toast.error(error.message || "Something went wrong");
           });
       });
@@ -49,9 +53,11 @@ export const PageContent = ({
           image_id: id,
         })
           .then(() => {
+            router.refresh();
             toast.success("You have liked an image.");
           })
           .catch((error) => {
+            router.refresh();
             toast.error(error.message || "Something went wrong");
           });
       });

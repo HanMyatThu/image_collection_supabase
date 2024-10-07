@@ -61,7 +61,6 @@ export const getImages = async (): Promise<Image[]> => {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.log(error);
     return [];
   }
   return (data as Image[]) || [];
@@ -86,7 +85,6 @@ export const getImagesByUserId = async (): Promise<Image[]> => {
     .order("created_at", { ascending: true });
 
   if (error) {
-    console.log(error);
     return [];
   }
   return (data as Image[]) || [];

@@ -1,5 +1,4 @@
 "use client";
-
 import { CameraIcon, HomeIcon, Search } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -7,31 +6,34 @@ import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
 import { UseAuthModal } from "@/hooks/use-auth-modal";
-import { useUser } from "@/hooks/use-user";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { useTransition } from "react";
+import { signOut } from "@/actions/auth";
+import { User } from "@supabase/supabase-js";
 
 interface HeaderProps {
   children: React.ReactNode;
   className?: string;
+  user: User | null;
 }
 
-export const Header = ({ children, className }: HeaderProps) => {
+export const Header = ({ children, className, user }: HeaderProps) => {
   const router = useRouter();
+  const [, startTransition] = useTransition();
   const { changeMode, onOpen } = UseAuthModal();
-  const { user, setUser } = useUser();
 
-  const supabaseClient = createClient();
-
-  const handleSignOut = async () => {
-    const { error } = await supabaseClient.auth.signOut();
-    router.refresh();
-    if (error) {
-      toast.error(error.message);
-    } else {
-      setUser(null);
-      toast.success("logged out!");
-    }
+  const handleSignOut = () => {
+    startTransition(() => {
+      signOut()
+        .then(() => {
+          toast.success("You have log out successfully");
+          router.push("/");
+        })
+        .catch((error) => {
+          toast.error(error.message || "Something went wrong.");
+          router.refresh();
+        });
+    });
   };
 
   return (

@@ -43,19 +43,19 @@ export const Album = ({ images }: AlbumProps) => {
         />
       </div>
       <div className="flex flex-col gap-y-4 mt-4 px-3">
-        {!images.length && (
+        {images.length === 0 && (
           <div className="w-full mb-4 text-muted-foreground text-sm">
             No Image uploaded yet
           </div>
         )}
-        {privateImages.length && (
+        {!!privateImages.length && (
           <AlbumSection title="Private images" status="private">
             {privateImages.map((image) => (
               <MediaItem key={image.id} data={image} />
             ))}
           </AlbumSection>
         )}
-        {publicImages.length && (
+        {!!publicImages.length && (
           <AlbumSection title="Public images" status="public">
             {publicImages.map((image) => (
               <MediaItem key={image.id} data={image} />
