@@ -47,7 +47,7 @@ export const UploadModal = () => {
   const formSchema = z.object({
     title: z.string().min(1, "Title is required"),
     description: z.string().min(1, "Description is required"),
-    is_public: z.boolean().default(false),
+    is_public: z.boolean().default(true),
     image_path: z
       .instanceof(File, { message: "Please upload an image" })
       .refine((file) => file.size < 1000000, {
@@ -60,7 +60,7 @@ export const UploadModal = () => {
     defaultValues: {
       title: "",
       description: "",
-      is_public: false,
+      is_public: true,
       image_path: undefined,
     },
   });
@@ -227,9 +227,9 @@ export const UploadModal = () => {
                 render={({ field }) => (
                   <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                     <div className="space-y-0.5">
-                      <FormLabel>Make image private</FormLabel>
+                      <FormLabel>Make image public</FormLabel>
                       <FormDescription>
-                        Only you can access this image.
+                        Everyone can access this image.
                       </FormDescription>
                     </div>
                     <FormControl>

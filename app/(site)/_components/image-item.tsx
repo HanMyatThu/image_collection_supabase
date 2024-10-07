@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { ZoomIn } from "lucide-react";
+import { ZoomIn, HeartIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { useLoadImage } from "@/hooks/use-load-image";
@@ -18,9 +18,9 @@ export const ImageItem = ({ data, onClick }: ImageItemProps) => {
   return (
     <div
       onClick={() => onClick(data.id)}
-      className="relative group flex flex-col items-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3"
+      className="relative flex flex-col items-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3"
     >
-      <div className="relative aspect-square w-full h-full rounded-md overflow-hidden group-hover:scale-105 transition">
+      <div className="relative group aspect-square w-full h-full rounded-md overflow-hidden hover:scale-105 transition">
         <Image
           src={imagePath || "/images/liked.jpg"}
           className="object-cover"
@@ -37,13 +37,21 @@ export const ImageItem = ({ data, onClick }: ImageItemProps) => {
           </Button>
         </Preview>
       </div>
-      <div className="flex flex-col items-start w-full p-4 gap-y-4">
-        <p className="font-semibold truncate w-full">{data.title}</p>
-        <p className="text-neutral-400 text-sm pb-4 w-full truncate">
+      <div className="flex flex-col items-start w-full p-4 gap-y-2">
+        <div className="relative w-full">
+          <p className="font-semibold truncate w-full">{data.title}</p>
+          <Button
+            className="absolute right-0 top-0"
+            size="icon"
+            variant="ghost"
+          >
+            <HeartIcon className="size-5" fill="red" />
+          </Button>
+        </div>
+        <p className="text-neutral-400 text-sm w-full truncate">
           {data.description}
         </p>
       </div>
-      <div className="absolute bottom-24 right-5"></div>
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { UseAuthModal } from "@/hooks/use-auth-modal";
 import { useUploadModal } from "@/hooks/use-upload-modal";
 import { Image } from "@/types/types";
 import { MediaItem } from "./media-item";
+import { AlbumSection } from "./album-section";
 
 interface AlbumProps {
   images: Image[];
@@ -24,6 +25,9 @@ export const Album = ({ images }: AlbumProps) => {
     return uploadModal.onOpen();
   };
 
+  const privateImages = images.filter((image) => !image.is_public);
+  const publicImages = images.filter((image) => image.is_public);
+
   return (
     <div className="flex flex-col">
       <div className="flex items-center justify-between pt-2">
@@ -39,9 +43,25 @@ export const Album = ({ images }: AlbumProps) => {
         />
       </div>
       <div className="flex flex-col gap-y-2 mt-4 px-3">
-        {images.map((image) => (
-          <MediaItem key={image.id} data={image} onClick={() => {}} />
-        ))}
+        {!images.length && (
+          <div className="w-full mb-4 text-muted-foreground text-sm">
+            No Image uploaded yet
+          </div>
+        )}
+        {privateImages.length && (
+          <AlbumSection title="Private images" status="private">
+            {privateImages.map((image) => (
+              <MediaItem key={image.id} data={image} />
+            ))}
+          </AlbumSection>
+        )}
+        {publicImages.length && (
+          <AlbumSection title="Public images" status="public">
+            {publicImages.map((image) => (
+              <MediaItem key={image.id} data={image} />
+            ))}
+          </AlbumSection>
+        )}
       </div>
     </div>
   );

@@ -1,11 +1,13 @@
 import { Header } from "@/components/header";
 // import { Loader2 } from "lucide-react";
 import { PageContent } from "./_components/page-content";
-import { getPublicImages } from "@/actions/get-public-images";
 import { ListItem } from "@/components/common/list-item";
+import { getImages } from "@/actions/images";
+
+export const revalidate = 0;
 
 const HomePage = async () => {
-  const images = await getPublicImages();
+  const images = await getImages();
 
   return (
     <div>
