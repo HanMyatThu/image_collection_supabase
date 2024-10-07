@@ -91,3 +91,30 @@ export const getImagesByUserId = async (): Promise<Image[]> => {
   }
   return (data as Image[]) || [];
 };
+
+/**
+ * @param title string song title
+ * Get Image by Title
+ * use this function for search functionality
+ * @return Image[] return images with search keyword for the users
+ */
+export const getImageByTitle = async (title: string): Promise<Image[]> => {
+  const supabase = createServerComponentClient();
+
+  if (!title) {
+    const allImages = await getImages();
+    return allImages;
+  }
+
+  const { data, error } = await supabase
+    .from("images")
+    .select("*")
+    .ilike("title", `%${title}%`)
+    .order("created_at", { ascending: true });
+
+  if (error) {
+    return [];
+  }
+
+  return (data as Image[]) || [];
+};

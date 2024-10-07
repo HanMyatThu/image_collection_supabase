@@ -13,7 +13,7 @@ export const AlbumSection = ({
 }: AlbumSectionProps) => {
   return (
     <div className="gap-y-4">
-      <div className="w-full flex justify-between">
+      <div className="w-full flex justify-between mb-4">
         <p className="text-muted-foreground">{title}</p>
         <StatusBadge variant={status} />
       </div>

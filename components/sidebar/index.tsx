@@ -1,7 +1,7 @@
 "use client";
 import { useMemo } from "react";
 import { usePathname } from "next/navigation";
-import { HomeIcon, SearchIcon } from "lucide-react";
+import { HeartIcon, HomeIcon, SearchIcon } from "lucide-react";
 
 import { Box } from "./box";
 import { SidebarItem } from "./sidebar-item";
@@ -22,6 +22,12 @@ export const Sidebar = ({ children, images }: SidebarProps) => {
         active: pathname !== "/search",
         href: "/",
         icon: HomeIcon,
+      },
+      {
+        label: "Favourites",
+        active: pathname === "/favourite",
+        href: "/favourite",
+        icon: HeartIcon,
       },
       {
         label: "Search",

@@ -21,7 +21,7 @@ const HomePage = async () => {
     <div>
       <Header>
         <div className="mb-2">
-          <h1 className="text-white text-xl font-semibold mt-8">
+          <h1 className="text-white text-xl font-semibold mt-4">
             Your Favourite Images
           </h1>
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-3 mt-4">
