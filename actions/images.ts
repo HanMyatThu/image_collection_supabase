@@ -67,6 +67,48 @@ export const getImages = async (): Promise<Image[]> => {
 };
 
 /**
+ * Update image
+ *
+ * @param id: string Image id
+ * @param title: string  image title string
+ * @param description: string image description string
+ * @param is_public: boolean image publicity
+ * if no session, return error
+ * @return message
+ */
+export const updateImage = async (data: {
+  id: string;
+  title: string;
+  description: string;
+  is_public: boolean;
+}) => {
+  const supabase = createServerComponentClient();
+  const { data: sessionUser, error: sessionError } =
+    await supabase.auth.getUser();
+
+  if (!sessionUser.user || sessionError) {
+    throw new Error("Unauthorized access!");
+  }
+
+  const { error } = await supabase
+    .from("images")
+    .update({
+      title: data.title,
+      description: data.description,
+      is_public: data.is_public,
+    })
+    .eq("id", data.id);
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  revalidatePath(`/${sessionUser.user.id}/images`);
+  revalidatePath("/");
+  return "Image updated";
+};
+
+/**
  * Get all images of a user
  * return null if user is not login
  * @returns Image[] return all images from the users (both private and public)

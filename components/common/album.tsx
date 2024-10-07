@@ -8,12 +8,14 @@ import { Image } from "@/types/types";
 import { MediaItem } from "./media-item";
 import { AlbumSection } from "./album-section";
 import { ToolTipHint } from "./tooltip-hint";
+import { useRouter } from "next/navigation";
 
 interface AlbumProps {
   images: Image[];
 }
 
 export const Album = ({ images }: AlbumProps) => {
+  const router = useRouter();
   const authModal = UseAuthModal();
   const uploadModal = useUploadModal();
   const { user } = useUser();
@@ -54,14 +56,22 @@ export const Album = ({ images }: AlbumProps) => {
         {!!privateImages.length && (
           <AlbumSection title="Private images" status="private">
             {privateImages.map((image) => (
-              <MediaItem key={image.id} data={image} />
+              <MediaItem
+                key={image.id}
+                data={image}
+                onClick={() => router.push(`/${user!.id}/images`)}
+              />
             ))}
           </AlbumSection>
         )}
         {!!publicImages.length && (
           <AlbumSection title="Public images" status="public">
             {publicImages.map((image) => (
-              <MediaItem key={image.id} data={image} />
+              <MediaItem
+                key={image.id}
+                data={image}
+                onClick={() => router.push(`/${user!.id}/images`)}
+              />
             ))}
           </AlbumSection>
         )}

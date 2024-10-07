@@ -126,8 +126,6 @@ export const UploadModal = () => {
     form.resetField("image_path", { keepTouched: false });
   };
 
-  console.log(file, "file");
-
   return (
     <Dialog open={uploadModal.isOpen} onOpenChange={onChange}>
       <DialogContent>
@@ -250,7 +248,7 @@ export const UploadModal = () => {
                 </div>
               )}
               <div className="w-full flex justify-end gap-x-2">
-                <DialogClose>
+                <DialogClose asChild>
                   <Button type="button" variant="ghost">
                     Cancel
                   </Button>

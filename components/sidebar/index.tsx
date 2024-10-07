@@ -40,7 +40,7 @@ export const Sidebar = ({ children, images }: SidebarProps) => {
       {
         label: "Images",
         active: pathname === `${user?.id}/images`,
-        href: `${user?.id}/images`,
+        href: `/${user?.id}/images`,
         icon: FileEdit,
       },
     ];

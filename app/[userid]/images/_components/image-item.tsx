@@ -4,13 +4,13 @@ import { ZoomIn, HeartIcon } from "lucide-react";
 import { useTransition } from "react";
 import { toast } from "sonner";
 
-import { Preview } from "@/components/common/preview";
 import { Button } from "@/components/ui/button";
+import { Preview } from "@/components/common/preview";
 import { useLoadImage } from "@/hooks/use-load-image";
 import { useUser } from "@/hooks/use-user";
 import { Image as ImageType } from "@/types/types";
-import { downloadImage } from "@/actions/images";
 import { downloadFile } from "@/lib/utils";
+import { downloadImage } from "@/actions/images";
 
 interface ImageItemProps {
   data: ImageType;
@@ -40,7 +40,7 @@ export const ImageItem = ({
           const url = window.URL.createObjectURL(blobData);
           downloadFile(url);
           window.URL.revokeObjectURL(url);
-          toast.success("Image downloaded");
+          toast.error("Image downloaded");
         })
         .catch((error) => {
           toast.error(error.message || "Something went wrong");
