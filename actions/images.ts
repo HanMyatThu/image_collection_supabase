@@ -31,6 +31,7 @@ export const createImage = async (data: ImageRequest) => {
  *
  * if no session, get public images only
  * if login, get public images and get private images where user Id === session user id
+ * is_public === true && (user_id === userId && is_public === false)
  * @returns
  */
 export const getImages = async (): Promise<Image[]> => {
@@ -40,14 +41,16 @@ export const getImages = async (): Promise<Image[]> => {
     const { data, error } = await supabase
       .from("images")
       .select("*")
-      .eq("is_public", true)
-      .or(`user_id.eq.${sessionUser.user.id}, is_public.eq.false`)
+      .or(
+        `is_public.eq.true,and(user_id.eq.${sessionUser.user.id}, is_public.eq.false)`
+      )
       .order("created_at", { ascending: true });
 
     if (error) {
       console.log(error);
       return [];
     }
+
     return (data as Image[]) || [];
   }
 

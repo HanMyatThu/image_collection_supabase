@@ -25,7 +25,6 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const images = await getImagesByUserId();
-  console.log(images, "images");
 
   return (
     <html lang="en">

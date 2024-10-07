@@ -1,30 +1,40 @@
 "use client";
-
-import { PlayIcon } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { useLoadImage } from "@/hooks/use-load-image";
+import { Image as IImage } from "@/types/types";
+
 interface ListItemProps {
-  image: string;
   name: string;
+  images: IImage[];
   href: string;
 }
 
-export const ListItem = ({ name, image, href }: ListItemProps) => {
+export const ListItem = ({ name, images, href }: ListItemProps) => {
   const router = useRouter();
+  const link = useLoadImage(images[0]);
 
   const onClick = () => {
     router.push(href);
   };
+
   return (
-    <button className="relative group flex items-center rounded-md overflow-hidden gap-x-4 bg-neutral-100/10 hover:bg-neutral-100/20 transition pr-4">
-      <div className="relative min-h-[64px] min-w-[64px]">
-        <Image alt="like" src={image} fill className="object-cover" />
-      </div>
-      <p className="font-medium truncate py-5">{name}</p>
-      <div className="absolute transition opacity-0 group-hover:opacity-100 rounded-full flex items-center justify-center bg-green-500 p-4 drop-shadow-md right-5  hover:scale-110">
-        <PlayIcon className="size-4 text-black" />
-      </div>
+    <button
+      onClick={onClick}
+      className="relative group flex flex-col h-64 w-64 rounded-md overflow-hidden gap-x-4 bg-neutral-100/10 hover:bg-neutral-100/20 transition pr-4"
+    >
+      {images.length >= 0 && (
+        <Image
+          src={link || "/images/logo.png"}
+          alt="Media Item"
+          className="object-cover opacity-55 group-hover:opacity-100 h-auto w-auto"
+          fill
+        />
+      )}
+      <p className="font-medium truncate absolute top-[45%] group-hover:opacity-55 flex justify-center ml-auto w-full group-hover:text-black/80">
+        {images.length === 0 ? "No favourite image yet" : name}
+      </p>
     </button>
   );
 };

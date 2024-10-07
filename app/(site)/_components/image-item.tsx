@@ -9,17 +9,23 @@ import { Preview } from "@/components/common/preview";
 
 interface ImageItemProps {
   data: ImageType;
-  onClick: (id: string) => void;
+  onClick: (id: string, isLike: boolean) => void;
+  favImageIds: string[];
+  disabled?: boolean;
 }
 
-export const ImageItem = ({ data, onClick }: ImageItemProps) => {
+export const ImageItem = ({
+  data,
+  onClick,
+  favImageIds,
+  disabled = false,
+}: ImageItemProps) => {
   const imagePath = useLoadImage(data);
 
+  const isLiked = favImageIds.includes(data.id);
+
   return (
-    <div
-      onClick={() => onClick(data.id)}
-      className="relative flex flex-col items-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3"
-    >
+    <div className="relative flex flex-col items-center rounded-md overflow-hidden gap-x-4 bg-neutral-400/5 hover:bg-neutral-400/10 transition p-3">
       <div className="relative group aspect-square w-full h-full rounded-md overflow-hidden hover:scale-105 transition">
         <Image
           src={imagePath || "/images/liked.jpg"}
@@ -41,11 +47,13 @@ export const ImageItem = ({ data, onClick }: ImageItemProps) => {
         <div className="relative w-full">
           <p className="font-semibold truncate w-full">{data.title}</p>
           <Button
+            onClick={() => onClick(data.id, isLiked)}
+            disabled={disabled}
             className="absolute right-0 top-0"
             size="icon"
             variant="ghost"
           >
-            <HeartIcon className="size-5" fill="red" />
+            <HeartIcon className="size-5" fill={isLiked ? "red" : "none"} />
           </Button>
         </div>
         <p className="text-neutral-400 text-sm w-full truncate">
